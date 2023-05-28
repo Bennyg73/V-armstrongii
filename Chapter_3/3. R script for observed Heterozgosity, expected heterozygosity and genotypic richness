@@ -1,0 +1,44 @@
+library(vcfR)
+library(adegenet)
+library(poppr)
+library(magrittr)
+library(hierfstat)
+
+setwd("C:/Users/Desktop/Bioinformatics/")
+#Example of a fully filtered vcf file.
+vcf <- read.vcfR("full_snps_dp8_sspc_paralog_x0.75_nobadsites_maxdp60_TR.vcf")
+
+#Make sure that your 'population labels' are in the ecology_population_data.txt file. You need three columns with the headers 'AccessID', 'Country', 'Site' 
+pop.data <- read.table("population_data.txt", sep = "\t", header = TRUE)
+
+all(colnames(full@gt)[-1] == pop.data$AccessID)
+
+gl_data<- vcfR2genlight(vcf)
+
+pop(gl_data) <- pop.data$Site
+
+#Convert genlight object to genind object
+x.mat <- as.matrix(gl_data) # x is a genlight object
+x.mat[x.mat == 0] <- "1/1" # homozygote reference
+x.mat[x.mat == 1] <- "1/2" # heterozygote
+x.mat[x.mat == 2] <- "2/2" # homozygote alternate
+x.gid <- df2genind(x.mat, sep = "/", pop = pop(gl_data), ploidy = 2)
+
+#To check if number of individuals, number of populations ('groups') and their number of samples, and % of missing data is correct:
+summary(x.gid)
+#This just shows the number of individuals per population:
+summary(x.gid$pop)
+
+#Calculate expected heterozygosity (=within population gene diversity using Nei (1987)):
+Hs(x.gid)
+#Calculate observed heterozygosity:
+Ho(x.gid)
+
+#genotypic richness, diversity, and evenness
+#MLG (Number of multilocus genotypes (MLG) observed) is a measure of genotypic richness. eMLG is a value that corrects for uneven sampling sizes
+#Diversity measures incorporate both genotypic richness and abundance. There are three measures of genotypic diversity employed by poppr, the Shannon-Wiener index (H), Stoddart and Taylor’s index (G), and Simpson’s index (lambda). Hexp = Nei's 1978 gene diversity (expected heterozygosity)
+pop_inbreeding <- poppr(x.gid)
+pop_inbreeding #Why does this give diferent values for Hexp than when Hs is used (above)? Is that because a different version of the Nei formula (1978 vs. 1987) is used?
+
+locus_table(x.gid)
+
