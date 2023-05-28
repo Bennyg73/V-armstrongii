@@ -1,0 +1,46 @@
+
+setwd("C:/Users/Desktop/Bioinformatics/")
+ben.dat <- read.csv("C:/Users/Desktop/Bioinformatics/bencoverscores.csv")
+
+#R studio code used for calculating ANOVA and plotting of log10 transformed healthy Canopy volume of Mt. White plants.
+summary(ben.dat) #Used to examine file headers and data parameters. 
+
+> volume.log.aov <- aov(log10(Volume) ~ Area2, data = ben.dat)
+> anova(volume.log.aov, test ="f")
+
+> plot (Area2, log10(Volume), xlab ="Pukio stream location", ylab ="log10 Volume of plant foliage")
+
+
+#R studio code for Binomial GLM used for percentage flowering of Mt. White sites.
+summary(ben.dat) #Used to examine file headers and data parameters. 
+attach(ben.dat)
+
+Area2 <- as.factor(Area)
+Reprod2 <- as.factor(Reprod)
+summary(Area2)
+  
+> summary(Reprod2)
+
+reprod.glm <- glm(Reprod2 ~ Area2, family=binomial, data = ben.dat)
+> anova(reprod.glm,test = "Chi")
+
+> plot (Area2, Reprod2, xlab = "Pukio stream locations", ylab = "Percent flowering")
+
+
+#R Studio code used for calculating ANOVA and plotting Canopy cover metric of Mt. White sites. 
+summary(ben.dat)
+
+> area.cover.aov <- aov(Mean.canopy.cover ~ Area2, data = ben.dat)
+> anova(area.cover.aov, test ="F")
+
+> plot(Area2, Mean.canopy.cover, ylab ="Mean canopy cover")
+
+
+#R Studio code used for calculating ANOVA and plotting Canopy health metric of Mt. White sites.
+summary(ben.dat)
+
+area.condition.aov <- aov(Mean.Condition.score ~ Area2, data = ben.dat)
+> anova(area.condition.aov, test ="F")
+
+> plot (Area2, Mean.Condition.score, xlab ="Pukio stream location", ylab ="Mean Condition score")aov
+
