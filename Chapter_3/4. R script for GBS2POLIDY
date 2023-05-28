@@ -1,0 +1,79 @@
+library(gbs2ploidy)
+library(rjags)
+library(devtools)
+library(vcf2ploidy)
+library(ggplot2)
+
+setwd("C:/Users/Desktop/Bioinformatics/")
+
+# GBS2PLOIDY full data set 3 alt removed
+ploid <- vcf2ploidy(
+  "full_snps_dp8_sspc_paralog_x0.75_nobadsites_maxdp60_TR_3altremoved.vcf",
+  remove_double_hets = TRUE,
+  props = c(0.25, 0.33, 0.5, 0.66, 0.75),
+  mcmc.nchain = 2,
+  mcmc.steps = 10000,
+  mcmc.burnin = 1000,
+  mcmc.thin = 2,
+  train = FALSE,
+  pl = NA,
+  set = NA,
+  nclasses = 2,
+  pcs = 1:2
+)
+
+#PCA for full data set and 1000 burnin and 10000 mcmc
+key <- read.delim2("population_data.edited.TR.3alt.txt", header = TRUE, sep = "\t", dec = ",")
+pcframe <- as.data.frame(ploid$pcscrs)
+PC1 <- pcframe$PC1
+PC2 <- pcframe$PC2
+ggplot(pcframe, aes(x=PC1, y=PC2)) + geom_point(aes(color=key$Site, size =2)) + stat_ellipse()
+
+
+
+# GBS2PLOIDY full data set 
+ploid_full_2 <- vcf2ploidy(
+  "full_snps_dp8_sspc_paralog_x0.75_nobadsites_maxdp60_TR_salicorn.vcf",
+  remove_double_hets = TRUE,
+  props = c(0.25, 0.33, 0.5, 0.66, 0.75),
+  mcmc.nchain = 2,
+  mcmc.steps = 10000,
+  mcmc.burnin = 1000,
+  mcmc.thin = 2,
+  train = FALSE,
+  pl = NA,
+  set = NA,
+  nclasses = 2,
+  pcs = 1:2
+)
+
+#PCA for full data set and 1000 burnin and 10000 mcmc
+key <- read.delim2("population_data.edited.TR.txt", header = TRUE, sep = "\t", dec = ",")
+pcframe_full_2 <- as.data.frame(ploid_full_2$pcscrs)
+PC1 <- pcframe_full_2$PC1
+PC2 <- pcframe_full_2$PC2
+ggplot(pcframe_full_2, aes(x=PC1, y=PC2)) + geom_point(aes(color=key$Site, size =2)) + stat_ellipse()
+
+
+# GBS2PLOIDY ecology 
+ploid_ecology <- vcf2ploidy(
+  "ecology_dp8_sspc_paralog_x0.75_nobadSites_maxdp60_TCR.vcf",
+  remove_double_hets = TRUE,
+  props = c(0.25, 0.33, 0.5, 0.66, 0.75),
+  mcmc.nchain = 2,
+  mcmc.steps = 10000,
+  mcmc.burnin = 1000,
+  mcmc.thin = 2,
+  train = FALSE,
+  pl = NA,
+  set = NA,
+  nclasses = 2,
+  pcs = 1:2
+)
+
+#PCA for full data set and 1000 burnin and 10000 mcmc
+key <- read.delim2("ecology_population_data (1).txt", header = TRUE, sep = "\t", dec = ",")
+pcframe_eco <- as.data.frame(ploid_ecology$pcscrs)
+PC1 <- pcframe_eco$PC1
+PC2 <- pcframe_eco$PC2
+ggplot(pcframe_eco, aes(x=PC1, y=PC2)) + geom_point(aes(color=key$Site, size =2)) + stat_ellipse()
