@@ -1,6 +1,7 @@
 Chapter 2: Analysis of field work on the Mt. White population
 
 Here is the script I applied to my data set to create ANOVAS and graphs of eac of the four health metrics:
+
 Plant volume:
 Log 10 transformed volume measurements of healthy plant canopy. ANOVA and Box and Whisker plot with error bars used to display this data.
 
