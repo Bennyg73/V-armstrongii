@@ -1,10 +1,2 @@
-Chapter 3: Genomic analysis of Veronica armstrongii/
-
-1.
-
-2.
-
-3.
-
-
+Chapter 2: Analysis of field work on the Mt. White population
 
